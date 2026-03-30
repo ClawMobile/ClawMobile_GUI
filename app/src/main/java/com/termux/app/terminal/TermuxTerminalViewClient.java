@@ -575,8 +575,17 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
         // theme. For android 8.+, the "defaultFocusHighlightEnabled" attribute is also set to false
         // in TerminalView layout to fix the issue.
 
+        if (mActivity.isLauncherVisible()) {
+            Logger.logVerbose(LOG_TAG, "Keeping soft keyboard hidden while launcher overlay is visible");
+            KeyboardUtils.setSoftInputModeAdjustResize(mActivity);
+            KeyboardUtils.clearDisableSoftKeyboardFlags(mActivity);
+            KeyboardUtils.setSoftKeyboardAlwaysHiddenFlags(mActivity);
+            KeyboardUtils.hideSoftKeyboard(mActivity, mActivity.getTerminalView());
+            noShowKeyboard = true;
+            mShowSoftKeyboardIgnoreOnce = true;
+        }
         // If soft keyboard is disabled by user for Termux (check function docs for Termux behaviour info)
-        if (KeyboardUtils.shouldSoftKeyboardBeDisabled(mActivity,
+        else if (KeyboardUtils.shouldSoftKeyboardBeDisabled(mActivity,
             mActivity.getPreferences().isSoftKeyboardEnabled(),
             mActivity.getPreferences().isSoftKeyboardEnabledOnlyIfNoHardware())) {
             Logger.logVerbose(LOG_TAG, "Maintaining disabled soft keyboard");
@@ -643,6 +652,33 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
             mActivity.getTerminalView().requestFocus();
             mActivity.getTerminalView().postDelayed(getShowSoftKeyboardRunnable(), 300);
         }
+    }
+
+    public void hideSoftKeyboardForLauncher() {
+        KeyboardUtils.setSoftInputModeAdjustResize(mActivity);
+        KeyboardUtils.clearDisableSoftKeyboardFlags(mActivity);
+        KeyboardUtils.setSoftKeyboardAlwaysHiddenFlags(mActivity);
+        mActivity.getTerminalView().removeCallbacks(getShowSoftKeyboardRunnable());
+        KeyboardUtils.hideSoftKeyboard(mActivity, mActivity.getTerminalView());
+        mShowSoftKeyboardIgnoreOnce = true;
+    }
+
+    public void focusTerminalAndShowSoftKeyboard() {
+        if (KeyboardUtils.shouldSoftKeyboardBeDisabled(mActivity,
+            mActivity.getPreferences().isSoftKeyboardEnabled(),
+            mActivity.getPreferences().isSoftKeyboardEnabledOnlyIfNoHardware())) {
+            Logger.logVerbose(LOG_TAG, "Not showing soft keyboard when switching to terminal because it is disabled");
+            KeyboardUtils.disableSoftKeyboard(mActivity, mActivity.getTerminalView());
+            mActivity.getTerminalView().requestFocus();
+            return;
+        }
+
+        Logger.logVerbose(LOG_TAG, "Requesting TerminalView focus and showing soft keyboard after leaving launcher");
+        KeyboardUtils.clearDisableSoftKeyboardFlags(mActivity);
+        KeyboardUtils.setSoftInputModeAdjustResize(mActivity);
+        mShowSoftKeyboardIgnoreOnce = false;
+        mActivity.getTerminalView().requestFocus();
+        mActivity.getTerminalView().postDelayed(getShowSoftKeyboardRunnable(), 300);
     }
 
     private Runnable getShowSoftKeyboardRunnable() {

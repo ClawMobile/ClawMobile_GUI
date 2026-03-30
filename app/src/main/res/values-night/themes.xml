@@ -9,10 +9,10 @@
     <!-- NOTE: Cannot use "Light." since it hides the terminal scrollbar on the default black background. -->
     <style name="Theme.TermuxActivity.DayNight.NoActionBar" parent="Theme.TermuxApp.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorPrimary">@color/claw_ink_950</item>
+        <item name="colorPrimaryVariant">@color/claw_ink_950</item>
 
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/claw_ink_950</item>
 
         <!-- Avoid action mode toolbar pushing down terminal content when
              selecting text on pre-6.0 (non-floating toolbar). -->
@@ -27,14 +27,14 @@
 
         <!-- Left drawer. -->
         <item name="buttonBarButtonStyle">@style/TermuxActivity.Drawer.ButtonBarStyle.Dark</item>
-        <item name="termuxActivityDrawerBackground">@color/black</item>
-        <item name="termuxActivityDrawerImageTint">@color/white</item>
+        <item name="termuxActivityDrawerBackground">@drawable/clawmobile_drawer_background</item>
+        <item name="termuxActivityDrawerImageTint">@color/claw_text_primary</item>
 
         <!-- Extra keys colors. -->
-        <item name="extraKeysButtonTextColor">@color/white</item>
-        <item name="extraKeysButtonActiveTextColor">@color/red_400</item>
-        <item name="extraKeysButtonBackgroundColor">@color/black</item>
-        <item name="extraKeysButtonActiveBackgroundColor">@color/grey_500</item>
+        <item name="extraKeysButtonTextColor">@color/claw_text_primary</item>
+        <item name="extraKeysButtonActiveTextColor">@color/claw_ink_950</item>
+        <item name="extraKeysButtonBackgroundColor">@color/claw_panel_soft</item>
+        <item name="extraKeysButtonActiveBackgroundColor">@color/claw_amber</item>
     </style>
 
 </resources>

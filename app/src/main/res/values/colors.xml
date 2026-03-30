@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="claw_ink_950">#0A0D0C</color>
+    <color name="claw_ink_900">#111614</color>
+    <color name="claw_panel">#D9161A18</color>
+    <color name="claw_panel_soft">#A5131715</color>
+    <color name="claw_line">#47F1C77A</color>
+    <color name="claw_frame">#1EF8F1E1</color>
+    <color name="claw_text_primary">#FFF7F0E2</color>
+    <color name="claw_text_secondary">#D9CFBFA4</color>
+    <color name="claw_text_muted">#93A39284</color>
+    <color name="claw_ember">#FFB95C34</color>
+    <color name="claw_amber">#FFF1BE64</color>
+    <color name="claw_signal">#FFD6FF9B</color>
+    <color name="claw_signal_dim">#30D6FF9B</color>
+    <color name="claw_progress_track">#331D251D</color>
+    <color name="claw_nav_shell">#F00A0D0C</color>
+    <color name="claw_nav_inner">#E1121614</color>
+    <color name="claw_nav_idle_fill">#88121513</color>
+    <color name="claw_nav_idle_stroke">#1FF7F0E2</color>
+    <color name="claw_nav_active_fill_top">#FF3B2B18</color>
+    <color name="claw_nav_active_fill_bottom">#E1282017</color>
+    <color name="claw_nav_active_stroke">#66F1BE64</color>
 </resources>

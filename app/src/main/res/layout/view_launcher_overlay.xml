@@ -1,94 +1,1728 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/launcher_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF1A1A2E">
+    android:background="@drawable/clawmobile_launcher_background"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
-    <!-- Small button to switch to terminal view, top-right corner -->
-    <ImageButton
-        android:id="@+id/btn_switch_to_terminal"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_terminal_switch"
-        android:contentDescription="@string/action_switch_to_terminal"
-        android:alpha="0.7" />
-
-    <!-- Center content -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="32dp">
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-6dp"
+        android:layout_marginBottom="12dp"
+        android:alpha="0.08"
+        android:fontFamily="sans-serif-condensed"
+        android:letterSpacing="0.14"
+        android:text="@string/clawmobile_watermark"
+        android:textColor="@color/claw_text_primary"
+        android:textSize="54sp"
+        android:textStyle="bold" />
 
-        <!-- App title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/clawmobile_title"
-            android:textColor="#FFFFFF"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="20dp"
+        android:paddingTop="96dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="124dp">
 
-        <!-- Status text -->
-        <TextView
-            android:id="@+id/launcher_status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/clawmobile_ready"
-            android:textColor="#B0B0B0"
-            android:textSize="14sp"
-            android:layout_marginBottom="40dp" />
-
-        <!-- Install button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_clawmobile_install"
-            android:layout_width="280dp"
-            android:layout_height="64dp"
-            android:text="@string/clawmobile_install_start"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:backgroundTint="#FF6C63FF"
-            android:textColor="#FFFFFF" />
-
-        <!-- Progress section (hidden by default) -->
         <LinearLayout
-            android:id="@+id/launcher_progress_section"
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginTop="32dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/launcher_progress_bar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
+            <LinearLayout
+                android:id="@+id/launcher_setup_hero_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="#FF6C63FF"
-                android:progressBackgroundTint="#33FFFFFF" />
+                android:background="@drawable/clawmobile_panel_background"
+                android:elevation="14dp"
+                android:gravity="start"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.14"
+                    android:text="@string/clawmobile_ready"
+                    android:textColor="@color/claw_signal"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/claw_amber" />
+
+                <ImageView
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/clawmobile_title"
+                    android:src="@drawable/clawmobile_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/clawmobile_console_title"
+                    android:textColor="@color/claw_text_primary"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/clawmobile_console_subtitle"
+                    android:textColor="@color/claw_text_secondary"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/clawmobile_info_tile_bg"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.14"
+                            android:text="@string/clawmobile_runtime_label"
+                            android:textColor="@color/claw_text_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="sans-serif-condensed"
+                            android:text="@string/clawmobile_runtime_value"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/clawmobile_info_tile_bg"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.14"
+                            android:text="@string/clawmobile_control_label"
+                            android:textColor="@color/claw_text_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="sans-serif-condensed"
+                            android:text="@string/clawmobile_control_value"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/launcher_status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:background="@drawable/clawmobile_info_tile_bg"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.12"
+                    android:paddingStart="14dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/clawmobile_ready"
+                    android:textColor="@color/claw_signal"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/launcher_progress_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/clawmobile_progress_panel_bg"
+                android:orientation="vertical"
+                android:padding="18dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.14"
+                    android:text="@string/clawmobile_progress_label"
+                    android:textColor="@color/claw_text_muted"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:lineSpacingExtra="1dp"
+                    android:text="@string/clawmobile_progress_hint"
+                    android:textColor="@color/claw_text_secondary"
+                    android:textSize="12sp" />
+
+                <ProgressBar
+                    android:id="@+id/launcher_progress_bar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="14dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/clawmobile_progress_drawable" />
+
+                <TextView
+                    android:id="@+id/launcher_progress_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="1dp"
+                    android:text="@string/clawmobile_installing"
+                    android:textColor="@color/claw_text_secondary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.14"
+                    android:text="@string/clawmobile_terminal_tail_label"
+                    android:textColor="@color/claw_text_muted"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/launcher_terminal_tail_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/clawmobile_toolbar_input_bg"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="1dp"
+                    android:maxLines="3"
+                    android:minHeight="56dp"
+                    android:padding="14dp"
+                    android:text="@string/clawmobile_terminal_tail_placeholder"
+                    android:textColor="@color/claw_text_primary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/launcher_setup_tab_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.14"
+                        android:text="@string/clawmobile_setup_panel_label"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_setup_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_setup_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_install"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.08"
+                        android:text="@string/clawmobile_install_start"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_ink_950"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_amber"
+                        app:cornerRadius="20dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_text_primary"
+                        app:strokeWidth="1dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_setup_panel_note"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/clawmobile_pairing_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_pairing_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_pairing_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/clawmobile_pairing_host"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_pairing_host_hint"
+                        android:inputType="textUri|textNoSuggestions"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/clawmobile_pairing_port"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_pairing_port_hint"
+                        android:inputType="number"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/clawmobile_pairing_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_pairing_code_hint"
+                        android:inputType="textCapCharacters|textNoSuggestions"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/clawmobile_pairing_connect_port"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_pairing_connect_port_hint"
+                        android:inputType="number"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_pairing_note"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="11sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_pair_device"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.06"
+                        android:text="@string/clawmobile_pairing_pair_submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_ink_950"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_amber"
+                        app:cornerRadius="18dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_text_primary"
+                        app:strokeWidth="1dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_connect_device"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.06"
+                        android:text="@string/clawmobile_pairing_connect_submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_panel_soft"
+                        app:cornerRadius="18dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_line"
+                        app:strokeWidth="1dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/launcher_channels_tab_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.14"
+                        android:text="@string/clawmobile_channels_panel_label"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_channels_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_channels_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/clawmobile_onboarding_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_onboarding_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_onboarding_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.14"
+                        android:text="@string/clawmobile_onboarding_auth_label"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <RadioGroup
+                        android:id="@+id/clawmobile_onboarding_provider_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/clawmobile_info_tile_bg"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_openai"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:checked="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_openai"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_anthropic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_anthropic"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_gemini"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_gemini"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_zai"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_zai"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_custom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_custom"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/clawmobile_onboarding_provider_skip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/claw_amber"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/clawmobile_onboarding_provider_skip"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="14sp" />
+
+                    </RadioGroup>
+
+                    <EditText
+                        android:id="@+id/clawmobile_onboarding_api_key"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_onboarding_api_key_hint"
+                        android:inputType="textVisiblePassword|textNoSuggestions"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/clawmobile_onboarding_custom_fields"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/clawmobile_onboarding_base_url"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="14dp"
+                            android:background="@drawable/clawmobile_toolbar_input_bg"
+                            android:fontFamily="monospace"
+                            android:hint="@string/clawmobile_onboarding_base_url_hint"
+                            android:inputType="textUri|textNoSuggestions"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textColor="@color/claw_text_primary"
+                            android:textColorHint="@color/claw_text_muted"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/clawmobile_onboarding_model_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="14dp"
+                            android:background="@drawable/clawmobile_toolbar_input_bg"
+                            android:fontFamily="monospace"
+                            android:hint="@string/clawmobile_onboarding_model_id_hint"
+                            android:inputType="textNoSuggestions"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textColor="@color/claw_text_primary"
+                            android:textColorHint="@color/claw_text_muted"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/clawmobile_onboarding_workspace"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_onboarding_workspace_hint"
+                        android:inputType="textNoSuggestions"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_onboarding_note"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_onboarding_secret_note"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_onboarding_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.06"
+                        android:text="@string/clawmobile_onboarding_submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_ink_950"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_amber"
+                        app:cornerRadius="18dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_text_primary"
+                        app:strokeWidth="1dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/clawmobile_channel_pairing_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_channel_pairing_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_channel_pairing_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/clawmobile_channel_pairing_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/clawmobile_toolbar_input_bg"
+                        android:fontFamily="monospace"
+                        android:hint="@string/clawmobile_channel_pairing_code_hint"
+                        android:inputType="textCapCharacters|textNoSuggestions"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/claw_text_primary"
+                        android:textColorHint="@color/claw_text_muted"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_channel_pairing_note"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="11sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_channel_pairing_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.06"
+                        android:text="@string/clawmobile_channel_pairing_submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_ink_950"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_amber"
+                        app:cornerRadius="18dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_text_primary"
+                        app:strokeWidth="1dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/launcher_operate_tab_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.14"
+                        android:text="@string/clawmobile_operate_panel_label"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/clawmobile_operate_panel_title"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_operate_panel_subtitle"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/clawmobile_info_tile_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="14dp"
+                        android:paddingBottom="8dp">
+
+                        <View
+                            android:id="@+id/launcher_operate_status_dot"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@drawable/clawmobile_status_dot" />
+
+                        <TextView
+                            android:id="@+id/launcher_operate_status_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.12"
+                            android:text="@string/clawmobile_operate_status_idle"
+                            android:textColor="@color/claw_amber"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/launcher_operate_summary_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_operate_summary_default"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/launcher_operate_detail_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/clawmobile_operate_detail_default"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_operate_gateway_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/launcher_operate_gateway_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="sans-serif-condensed"
+                                android:text="@string/clawmobile_operate_gateway_default"
+                                android:textColor="@color/claw_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_operate_device_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/launcher_operate_device_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="sans-serif-condensed"
+                                android:text="@string/clawmobile_operate_device_default"
+                                android:textColor="@color/claw_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_clawmobile_run"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:letterSpacing="0.08"
+                        android:text="@string/clawmobile_run_start"
+                        android:textAllCaps="false"
+                        android:textColor="@color/claw_ink_950"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/claw_amber"
+                        app:cornerRadius="20dp"
+                        app:rippleColor="@color/claw_signal_dim"
+                        app:strokeColor="@color/claw_text_primary"
+                        app:strokeWidth="1dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:lineSpacingExtra="1dp"
+                        android:text="@string/clawmobile_operate_note"
+                        android:textColor="@color/claw_text_secondary"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/launcher_health_tab_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/clawmobile_progress_panel_bg"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:letterSpacing="0.14"
+                        android:text="@string/clawmobile_health_panel_label"
+                        android:textColor="@color/claw_text_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-condensed"
+                                android:text="@string/clawmobile_health_panel_title"
+                                android:textColor="@color/claw_text_primary"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:lineSpacingExtra="2dp"
+                                android:text="@string/clawmobile_health_panel_subtitle"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_clawmobile_refresh_health"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="12dp"
+                            android:fontFamily="sans-serif-condensed"
+                            android:letterSpacing="0.04"
+                            android:text="@string/clawmobile_health_refresh"
+                            android:textAllCaps="false"
+                            android:textColor="@color/claw_text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/claw_panel_soft"
+                            app:cornerRadius="16dp"
+                            app:rippleColor="@color/claw_signal_dim"
+                            app:strokeColor="@color/claw_line"
+                            app:strokeWidth="1dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_repo_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_repo_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_repo_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_repo_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_runtime_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_runtime_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_runtime_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_runtime_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_setup_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_setup_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_setup_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_setup_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_adb_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_adb_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_adb_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_adb_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_device_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_device_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_device_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_device_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/clawmobile_info_tile_bg"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:letterSpacing="0.14"
+                                android:text="@string/clawmobile_health_gateway_label"
+                                android:textColor="@color/claw_text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/launcher_health_gateway_dot"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/clawmobile_status_dot" />
+
+                                <TextView
+                                    android:id="@+id/launcher_health_gateway_state"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="sans-serif-condensed"
+                                    android:text="@string/clawmobile_health_state_pending"
+                                    android:textColor="@color/claw_amber"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/launcher_health_gateway_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/clawmobile_health_detail_pending"
+                                android:textColor="@color/claw_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/launcher_progress_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/clawmobile_installing"
-                android:textColor="#B0B0B0"
-                android:textSize="13sp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="16dp"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="1dp"
+                android:text="@string/clawmobile_terminal_hint"
+                android:textColor="@color/claw_text_muted"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:baselineAligned="false"
+        android:elevation="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clawmobile_badge_background"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.16"
+            android:paddingStart="12dp"
+            android:paddingTop="7dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="7dp"
+            android:text="@string/clawmobile_badge"
+            android:textColor="@color/claw_ink_950"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:alpha="0.35"
+            android:background="@color/claw_line" />
+
+        <ImageButton
+            android:id="@+id/btn_switch_to_terminal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/clawmobile_terminal_button_bg"
+            android:contentDescription="@string/action_switch_to_terminal"
+            android:padding="11dp"
+            android:src="@drawable/ic_terminal_switch"
+            android:tint="@color/claw_text_primary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/clawmobile_bottom_nav_bg"
+        android:elevation="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/btn_clawmobile_tab_setup"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:layout_weight="1"
+            android:background="@drawable/clawmobile_bottom_tab_active"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <View
+                android:id="@+id/launcher_tab_indicator_setup"
+                android:layout_width="26dp"
+                android:layout_height="3dp"
+                android:background="@drawable/clawmobile_bottom_tab_indicator" />
+
+            <TextView
+                android:id="@+id/launcher_tab_label_setup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:letterSpacing="0.06"
+                android:text="@string/clawmobile_tab_setup"
+                android:textColor="@color/claw_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/launcher_tab_meta_setup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.18"
+                android:text="@string/clawmobile_tab_setup_meta"
+                android:textColor="@color/claw_amber"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_clawmobile_tab_channels"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/clawmobile_bottom_tab_idle"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <View
+                android:id="@+id/launcher_tab_indicator_channels"
+                android:layout_width="26dp"
+                android:layout_height="3dp"
+                android:alpha="0.18"
+                android:background="@drawable/clawmobile_bottom_tab_indicator" />
+
+            <TextView
+                android:id="@+id/launcher_tab_label_channels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:letterSpacing="0.06"
+                android:text="@string/clawmobile_tab_channels"
+                android:textColor="@color/claw_text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/launcher_tab_meta_channels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:alpha="0.72"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.18"
+                android:text="@string/clawmobile_tab_channels_meta"
+                android:textColor="@color/claw_text_muted"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_clawmobile_tab_operate"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/clawmobile_bottom_tab_idle"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <View
+                android:id="@+id/launcher_tab_indicator_operate"
+                android:layout_width="26dp"
+                android:layout_height="3dp"
+                android:alpha="0.18"
+                android:background="@drawable/clawmobile_bottom_tab_indicator" />
+
+            <TextView
+                android:id="@+id/launcher_tab_label_operate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:letterSpacing="0.06"
+                android:text="@string/clawmobile_tab_operate"
+                android:textColor="@color/claw_text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/launcher_tab_meta_operate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:alpha="0.72"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.18"
+                android:text="@string/clawmobile_tab_operate_meta"
+                android:textColor="@color/claw_text_muted"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_clawmobile_tab_health"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/clawmobile_bottom_tab_idle"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <View
+                android:id="@+id/launcher_tab_indicator_health"
+                android:layout_width="26dp"
+                android:layout_height="3dp"
+                android:alpha="0.18"
+                android:background="@drawable/clawmobile_bottom_tab_indicator" />
+
+            <TextView
+                android:id="@+id/launcher_tab_label_health"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:letterSpacing="0.06"
+                android:text="@string/clawmobile_tab_health"
+                android:textColor="@color/claw_text_secondary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/launcher_tab_meta_health"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:alpha="0.72"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.18"
+                android:text="@string/clawmobile_tab_health_meta"
+                android:textColor="@color/claw_text_muted"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

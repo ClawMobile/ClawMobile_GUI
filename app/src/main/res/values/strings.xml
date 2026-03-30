@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!DOCTYPE resources [
-    <!ENTITY TERMUX_PACKAGE_NAME "com.termux">
-    <!ENTITY TERMUX_APP_NAME "Termux">
-    <!ENTITY TERMUX_API_APP_NAME "Termux:API">
-    <!ENTITY TERMUX_BOOT_APP_NAME "Termux:Boot">
-    <!ENTITY TERMUX_FLOAT_APP_NAME "Termux:Float">
-    <!ENTITY TERMUX_STYLING_APP_NAME "Termux:Styling">
-    <!ENTITY TERMUX_TASKER_APP_NAME "Termux:Tasker">
-    <!ENTITY TERMUX_WIDGET_APP_NAME "Termux:Widget">
+    <!ENTITY TERMUX_PACKAGE_NAME "ae.clawmobile">
+    <!ENTITY TERMUX_APP_NAME "ClawMobile">
+    <!ENTITY TERMUX_API_APP_NAME "ClawMobile API">
+    <!ENTITY TERMUX_BOOT_APP_NAME "ClawMobile Boot">
+    <!ENTITY TERMUX_FLOAT_APP_NAME "ClawMobile Float">
+    <!ENTITY TERMUX_STYLING_APP_NAME "ClawMobile Styling">
+    <!ENTITY TERMUX_TASKER_APP_NAME "ClawMobile Tasker">
+    <!ENTITY TERMUX_WIDGET_APP_NAME "ClawMobile Widget">
     ]>
 
 <resources>
@@ -89,7 +89,7 @@
 
     <string name="action_report_issue">Report Issue</string>
     <string name="msg_generating_report">Generating Report</string>
-    <string name="msg_add_termux_debug_info">Add termux debug info to report?</string>
+    <string name="msg_add_termux_debug_info">Add ClawMobile debug info to report?</string>
 
     <string name="error_styling_not_installed">The &TERMUX_STYLING_APP_NAME; Plugin App is not installed.</string>
     <string name="action_styling_install">Install</string>
@@ -107,17 +107,17 @@
     <string name="error_display_over_other_apps_permission_not_granted_to_start_terminal">&TERMUX_APP_NAME; requires
         \"Display over other apps\" permission to start terminal sessions from background on Android >= 10.
         Grants it from Settings -> Apps -> &TERMUX_APP_NAME; -> Advanced</string>
-    <string name="error_termux_service_invalid_execution_command_runner">Invalid execution command runner to TermuxService: `%1$s`</string>
-    <string name="error_termux_service_unsupported_execution_command_runner">Unsupported execution command runner to TermuxService: `%1$s`</string>
-    <string name="error_termux_service_unsupported_execution_command_shell_create_mode">Unsupported execution command shell create mode to TermuxService: `%1$s`</string>
+    <string name="error_termux_service_invalid_execution_command_runner">Invalid execution command runner sent to the ClawMobile service: `%1$s`</string>
+    <string name="error_termux_service_unsupported_execution_command_runner">Unsupported execution command runner sent to the ClawMobile service: `%1$s`</string>
+    <string name="error_termux_service_unsupported_execution_command_shell_create_mode">Unsupported execution command shell create mode sent to the ClawMobile service: `%1$s`</string>
     <string name="error_termux_service_execution_command_shell_name_unset">Shell name not set but `%1$s` shell create mode passed</string>
 
 
 
     <!-- Termux RunCommandService -->
-    <string name="error_run_command_service_invalid_intent_action">Invalid intent action to RunCommandService: `%1$s`</string>
-    <string name="error_run_command_service_invalid_execution_command_runner">Invalid execution command runner to RunCommandService: `%1$s`</string>
-    <string name="error_run_command_service_mandatory_extra_missing">Mandatory extra missing to RunCommandService: \"%1$s\"</string>
+    <string name="error_run_command_service_invalid_intent_action">Invalid intent action sent to the ClawMobile command bridge: `%1$s`</string>
+    <string name="error_run_command_service_invalid_execution_command_runner">Invalid execution command runner sent to the ClawMobile command bridge: `%1$s`</string>
+    <string name="error_run_command_service_mandatory_extra_missing">Mandatory extra missing to the ClawMobile command bridge: \"%1$s\"</string>
     <string name="error_run_command_service_api_help">Visit %1$s for more info on RUN_COMMAND Intent usage.</string>
 
 
@@ -130,8 +130,8 @@
 
 
     <!-- Miscellaneous -->
-    <string name="error_termux_service_start_failed_general">Failed to start TermuxService. Check logcat for exception message.</string>
-    <string name="error_termux_service_start_failed_bg">Failed to start TermuxService while app is in background due to android bg restrictions.</string>
+    <string name="error_termux_service_start_failed_general">Failed to start the ClawMobile service. Check logcat for the exception message.</string>
+    <string name="error_termux_service_start_failed_bg">Failed to start the ClawMobile service while the app is in background due to Android background restrictions.</string>
 
 
 
@@ -231,14 +231,125 @@
 
     <!-- ClawMobile Launcher -->
     <string name="clawmobile_title">ClawMobile</string>
-    <string name="clawmobile_ready">Ready to install</string>
-    <string name="clawmobile_install_start">ClawMobile Install Start</string>
-    <string name="clawmobile_installing">Installing\u2026</string>
-    <string name="clawmobile_install_complete">Installation complete!</string>
-    <string name="clawmobile_install_failed">Installation failed. Tap to retry.</string>
-    <string name="clawmobile_preparing">Preparing environment\u2026</string>
-    <string name="action_switch_to_terminal">Switch to terminal</string>
+    <string name="clawmobile_ready">Field console ready</string>
+    <string name="clawmobile_install_start">Deploy ClawMobile</string>
+    <string name="clawmobile_installing">Running install sequence\u2026</string>
+    <string name="clawmobile_install_complete">Deployment complete!</string>
+    <string name="clawmobile_install_failed">Deployment failed. Tap to retry.</string>
+    <string name="clawmobile_preparing">Preparing terminal session\u2026</string>
+    <string name="clawmobile_bootstrapping_ubuntu">Bootstrapping Ubuntu\u2026</string>
+    <string name="clawmobile_proxy_running">Routing install traffic\u2026</string>
+    <string name="action_switch_to_terminal">Reveal terminal</string>
     <string name="action_switch_to_launcher">Switch to launcher</string>
+    <string name="clawmobile_badge">FIELD INSTALLER</string>
+    <string name="clawmobile_console_title">On-device runtime console</string>
+    <string name="clawmobile_console_subtitle">Drive the full ClawMobile install from a real foreground terminal session while this panel tracks each stage.</string>
+    <string name="clawmobile_console_header_badge">FIELD CONSOLE</string>
+    <string name="clawmobile_console_header_title">Terminal control deck</string>
+    <string name="clawmobile_console_header_subtitle">The shell below stays real and interactive. ClawMobile just frames the current phase, runtime, and next move around it.</string>
+    <string name="clawmobile_console_phase_label">PHASE</string>
+    <string name="clawmobile_console_phase_idle">Standby</string>
+    <string name="clawmobile_console_context_label">CONTEXT</string>
+    <string name="clawmobile_console_context_idle">Foreground terminal</string>
+    <string name="clawmobile_console_surface_label">LIVE SHELL</string>
+    <string name="clawmobile_console_surface_status">Interactive session</string>
+    <string name="clawmobile_console_footer_status">Command deck online</string>
+    <string name="clawmobile_console_footer_detail">Deploy ClawMobile to enter install and onboarding without leaving this shell.</string>
+    <string name="clawmobile_console_action_sessions">Sessions</string>
+    <string name="clawmobile_console_action_deck">Deck</string>
+    <string name="clawmobile_runtime_label">RUNTIME</string>
+    <string name="clawmobile_runtime_value">ClawMobile base + Ubuntu</string>
+    <string name="clawmobile_control_label">CONTROL PATH</string>
+    <string name="clawmobile_control_value">OpenClaw / ADB</string>
+    <string name="clawmobile_progress_label">LIVE TASK FEED</string>
+    <string name="clawmobile_progress_hint">Setup and daily runtime tasks run in the real shell under the hood. Please keep the app open while a task is active.</string>
+    <string name="clawmobile_terminal_tail_label">LIVE SHELL TAIL</string>
+    <string name="clawmobile_terminal_tail_placeholder">Waiting for terminal output…</string>
+    <string name="clawmobile_terminal_hint">Need the raw shell? Use the console key in the corner at any time.</string>
+    <string name="clawmobile_tab_setup">Setup</string>
+    <string name="clawmobile_tab_setup_meta">SYSTEM</string>
+    <string name="clawmobile_tab_channels">Channels</string>
+    <string name="clawmobile_tab_channels_meta">CHAT</string>
+    <string name="clawmobile_tab_operate">Operate</string>
+    <string name="clawmobile_tab_operate_meta">RUN</string>
+    <string name="clawmobile_tab_health">Health</string>
+    <string name="clawmobile_tab_health_meta">CHECK</string>
+    <string name="clawmobile_watermark">CLAWMOBILE</string>
+    <string name="clawmobile_drawer_title">Session grid</string>
+    <string name="clawmobile_drawer_subtitle">Tap to switch. Hold to rename.</string>
+    <string name="clawmobile_onboarding">Applying OpenClaw setup…</string>
+    <string name="clawmobile_onboard_start">Review OpenClaw setup</string>
+    <string name="clawmobile_setup_panel_label">SETUP TRACK</string>
+    <string name="clawmobile_setup_panel_title">First-time device setup</string>
+    <string name="clawmobile_setup_panel_subtitle">Deploy the runtime here, then link the local phone over wireless ADB. OpenClaw auth and chat access move to the Channels tab once the base runtime exists.</string>
+    <string name="clawmobile_setup_panel_note">Step order: deploy runtime first, then approve and connect wireless ADB. Use Channels for OpenClaw auth and Telegram pairing.</string>
+    <string name="clawmobile_channels_panel_label">CHANNELS</string>
+    <string name="clawmobile_channels_panel_title">Chat access and pairing</string>
+    <string name="clawmobile_channels_panel_subtitle">Configure OpenClaw auth here, then handle chat-facing access. This first pass is Telegram-first, with room for more IM tools next.</string>
+    <string name="clawmobile_onboarding_panel_title">OpenClaw core setup</string>
+    <string name="clawmobile_onboarding_panel_subtitle">Skip the text wizard. Choose a provider here and ClawMobile will run a non-interactive OpenClaw onboard with mobile-safe defaults.</string>
+    <string name="clawmobile_onboarding_auth_label">AUTH CHOICE</string>
+    <string name="clawmobile_onboarding_provider_openai">OpenAI API key</string>
+    <string name="clawmobile_onboarding_provider_anthropic">Anthropic API key</string>
+    <string name="clawmobile_onboarding_provider_gemini">Gemini API key</string>
+    <string name="clawmobile_onboarding_provider_zai">Z.AI API key</string>
+    <string name="clawmobile_onboarding_provider_custom">Custom provider</string>
+    <string name="clawmobile_onboarding_provider_skip">Skip auth for now</string>
+    <string name="clawmobile_onboarding_api_key_hint">API key</string>
+    <string name="clawmobile_onboarding_base_url_hint">Custom base URL</string>
+    <string name="clawmobile_onboarding_model_id_hint">Custom model ID</string>
+    <string name="clawmobile_onboarding_workspace_hint">Workspace path</string>
+    <string name="clawmobile_onboarding_submit">Apply OpenClaw setup</string>
+    <string name="clawmobile_onboarding_note">Mobile defaults: local mode, quickstart flow, loopback gateway on port 18789, no daemon, no channels, no skills, and no health wait.</string>
+    <string name="clawmobile_onboarding_secret_note">Keys are passed into OpenClaw onboarding and written by OpenClaw itself. ClawMobile does not persist the key in app settings.</string>
+    <string name="clawmobile_channel_pairing_panel_title">Telegram pairing</string>
+    <string name="clawmobile_channel_pairing_panel_subtitle">After your Telegram bot is already configured and responds with an 8-character pairing code, paste it here and ClawMobile will approve that chat in OpenClaw.</string>
+    <string name="clawmobile_channel_pairing_code_hint">Telegram pairing code</string>
+    <string name="clawmobile_channel_pairing_submit">Approve Telegram code</string>
+    <string name="clawmobile_channel_pairing_note">This is OpenClaw chat pairing, not wireless ADB. Use it after Telegram channel setup is already done. Other IM channel logins can still be completed from the terminal when needed.</string>
+    <string name="clawmobile_channel_pairing_running">Approving Telegram pairing…</string>
+    <string name="clawmobile_channel_pairing_complete">Telegram access approved.</string>
+    <string name="clawmobile_pairing_panel_title">Wireless ADB link</string>
+    <string name="clawmobile_pairing_panel_subtitle">When OpenClaw needs a local ADB device, enter the Wireless debugging pairing details here instead of dropping to raw shell commands.</string>
+    <string name="clawmobile_pairing_host_hint">Host or IP address</string>
+    <string name="clawmobile_pairing_port_hint">Pairing port</string>
+    <string name="clawmobile_pairing_code_hint">Pairing code</string>
+    <string name="clawmobile_pairing_connect_port_hint">ADB connect port</string>
+    <string name="clawmobile_pairing_pair_submit">Approve pairing code</string>
+    <string name="clawmobile_pairing_connect_submit">Connect local device</string>
+    <string name="clawmobile_pairing_note">On the same phone, the host is usually 127.0.0.1. Use the pairing port from “Pair device with pairing code”, then use the Wireless debugging IP address and port as the connect port.</string>
+    <string name="clawmobile_pairing_running">Running wireless ADB step…</string>
+    <string name="clawmobile_pairing_pair_complete">Pairing approved.</string>
+    <string name="clawmobile_pairing_complete">Local device linked.</string>
+    <string name="clawmobile_operate_panel_label">DAILY CONTROL</string>
+    <string name="clawmobile_operate_panel_title">Daily control surface</string>
+    <string name="clawmobile_operate_panel_subtitle">Use this tab after setup. Start or restart the OpenClaw gateway, watch the live tail, and only reveal the raw terminal when you need it.</string>
+    <string name="clawmobile_operate_status_idle">Setup required</string>
+    <string name="clawmobile_operate_summary_default">Finish the Setup tab first. Daily control becomes active once Ubuntu, OpenClaw, and wireless ADB are ready.</string>
+    <string name="clawmobile_operate_detail_default">When healthy, the gateway will listen on 127.0.0.1:18789 and the local phone will appear as a linked ADB device.</string>
+    <string name="clawmobile_operate_gateway_label">GATEWAY</string>
+    <string name="clawmobile_operate_device_label">DEVICE</string>
+    <string name="clawmobile_operate_gateway_default">Offline · 127.0.0.1:18789</string>
+    <string name="clawmobile_operate_device_default">Waiting for wireless ADB</string>
+    <string name="clawmobile_operate_note">ClawMobile keeps the shell real underneath this UI. Use the terminal button in the corner any time you want direct access.</string>
+    <string name="clawmobile_open_operate">Open daily control</string>
+    <string name="clawmobile_run_start">Start OpenClaw</string>
+    <string name="clawmobile_run_restart">Restart OpenClaw</string>
+    <string name="clawmobile_runtime_starting">Starting OpenClaw…</string>
+    <string name="clawmobile_runtime_running">OpenClaw online</string>
+    <string name="clawmobile_runtime_pending">Gateway start sent</string>
+    <string name="clawmobile_health_panel_label">SYSTEM HEALTH</string>
+    <string name="clawmobile_health_panel_title">Runtime health</string>
+    <string name="clawmobile_health_panel_subtitle">Like a VPN control surface, this tab checks the local stack and shows what is healthy, missing, or still waiting for a signal.</string>
+    <string name="clawmobile_health_refresh">Refresh status</string>
+    <string name="clawmobile_health_repo_label">BUNDLED REPO</string>
+    <string name="clawmobile_health_runtime_label">UBUNTU RUNTIME</string>
+    <string name="clawmobile_health_setup_label">OPENCLAW SETUP</string>
+    <string name="clawmobile_health_adb_label">TERMUX ADB</string>
+    <string name="clawmobile_health_device_label">LOCAL DEVICE</string>
+    <string name="clawmobile_health_gateway_label">GATEWAY</string>
+    <string name="clawmobile_health_state_pending">Checking…</string>
+    <string name="clawmobile_health_detail_pending">No status captured yet.</string>
 
     <!-- About Preference -->
     <string name="about_preference_title">About</string>

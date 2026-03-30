@@ -1,7 +1,6 @@
 package com.termux.app.terminal;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.SpannableString;
@@ -21,8 +20,6 @@ import androidx.core.content.ContextCompat;
 import com.termux.R;
 import com.termux.app.TermuxActivity;
 import com.termux.shared.termux.shell.command.runner.terminal.TermuxSession;
-import com.termux.shared.theme.NightMode;
-import com.termux.shared.theme.ThemeUtils;
 import com.termux.terminal.TerminalSession;
 
 import java.util.List;
@@ -57,13 +54,9 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
             return sessionRowView;
         }
 
-        boolean shouldEnableDarkTheme = ThemeUtils.shouldEnableDarkTheme(mActivity, NightMode.getAppNightMode().getName());
-
-        if (shouldEnableDarkTheme) {
-            sessionTitleView.setBackground(
-                ContextCompat.getDrawable(mActivity, R.drawable.session_background_black_selected)
-            );
-        }
+        sessionTitleView.setBackground(
+            ContextCompat.getDrawable(mActivity, R.drawable.session_background_black_selected)
+        );
 
         String name = sessionAtRow.mSessionName;
         String sessionTitle = sessionAtRow.getTitle();
@@ -86,9 +79,14 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
         } else {
             sessionTitleView.setPaintFlags(sessionTitleView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-        int defaultColor = shouldEnableDarkTheme ? Color.WHITE : Color.BLACK;
-        int color = sessionRunning || sessionAtRow.getExitStatus() == 0 ? defaultColor : Color.RED;
+        int runningColor = ContextCompat.getColor(mActivity, R.color.claw_text_primary);
+        int currentColor = ContextCompat.getColor(mActivity, R.color.claw_signal);
+        int failedColor = ContextCompat.getColor(mActivity, R.color.claw_ember);
+        boolean isCurrentSession = sessionAtRow == mActivity.getCurrentSession();
+        int color = sessionRunning || sessionAtRow.getExitStatus() == 0 ? runningColor : failedColor;
+        if (isCurrentSession) color = currentColor;
         sessionTitleView.setTextColor(color);
+        sessionTitleView.setAlpha(sessionRunning ? 1f : 0.72f);
         return sessionRowView;
     }
 

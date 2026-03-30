@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -60,6 +61,11 @@ import static com.termux.shared.termux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR
 final class TermuxInstaller {
 
     private static final String LOG_TAG = "TermuxInstaller";
+    private static final String CLAWMOBILE_MOTD_MARKER = "# CLAWMOBILE_MOTD_V1";
+    private static final String CLAWMOBILE_REPO_DIR_PATH = TermuxConstants.TERMUX_HOME_DIR_PATH + "/ClawMobile";
+    private static final String CLAWMOBILE_RUNTIME_ROOTFS_DIR_PATH =
+        TermuxConstants.TERMUX_VAR_PREFIX_DIR_PATH + "/lib/proot-distro/installed-rootfs/ubuntu";
+    private static final String CLAWMOBILE_MOTD_FILE_PATH = TermuxConstants.TERMUX_DATA_HOME_DIR_PATH + "/motd.sh";
 
     /** Performs bootstrap setup if necessary. */
     static void setupBootstrapIfNeeded(final Activity activity, final Runnable whenDone) {
@@ -107,6 +113,7 @@ final class TermuxInstaller {
             if (TermuxFileUtils.isTermuxPrefixDirectoryEmpty()) {
                 Logger.logInfo(LOG_TAG, "The termux prefix directory \"" + TERMUX_PREFIX_DIR_PATH + "\" exists but is empty or only contains specific unimportant files.");
             } else {
+                ensureClawMobileMotdInstalled();
                 whenDone.run();
                 return;
             }
@@ -220,6 +227,7 @@ final class TermuxInstaller {
 
                     // Recreate env file since termux prefix was wiped earlier
                     TermuxShellEnvironment.writeEnvironmentToFile(activity);
+                    ensureClawMobileMotdInstalled();
 
                     activity.runOnUiThread(whenDone);
 
@@ -373,6 +381,92 @@ final class TermuxInstaller {
 
     private static Error ensureDirectoryExists(File directory) {
         return FileUtils.createDirectoryFile(directory.getAbsolutePath());
+    }
+
+    private static void ensureClawMobileMotdInstalled() {
+        Error error = FileUtils.createDirectoryFile(TermuxConstants.TERMUX_DATA_HOME_DIR_PATH);
+        if (error != null) {
+            Logger.logErrorExtended(LOG_TAG, "Failed to create ClawMobile motd directory:\n" + error);
+            return;
+        }
+
+        File motdFile = new File(CLAWMOBILE_MOTD_FILE_PATH);
+        if (motdFile.exists()) {
+            StringBuilder existingContents = new StringBuilder();
+            error = FileUtils.readTextFromFile("ClawMobile motd script", CLAWMOBILE_MOTD_FILE_PATH,
+                StandardCharsets.UTF_8, existingContents, false);
+            if (error != null) {
+                Logger.logErrorExtended(LOG_TAG, "Failed to read existing ClawMobile motd:\n" + error);
+                return;
+            }
+
+            if (!existingContents.toString().contains(CLAWMOBILE_MOTD_MARKER)) {
+                Logger.logInfo(LOG_TAG, "Skipping ClawMobile motd install since user motd already exists at \"" +
+                    CLAWMOBILE_MOTD_FILE_PATH + "\".");
+                return;
+            }
+        }
+
+        error = FileUtils.writeTextToFile("ClawMobile motd script", CLAWMOBILE_MOTD_FILE_PATH,
+            StandardCharsets.UTF_8, getClawMobileMotdScript(), false);
+        if (error != null) {
+            Logger.logErrorExtended(LOG_TAG, "Failed to write ClawMobile motd:\n" + error);
+            return;
+        }
+
+        try {
+            //noinspection OctalInteger
+            Os.chmod(CLAWMOBILE_MOTD_FILE_PATH, 0700);
+        } catch (Exception e) {
+            Logger.logStackTraceWithMessage(LOG_TAG, "Failed to chmod ClawMobile motd", e);
+        }
+    }
+
+    private static String getClawMobileMotdScript() {
+        return String.join("\n",
+            "#!" + TERMUX_PREFIX_DIR_PATH + "/bin/bash",
+            CLAWMOBILE_MOTD_MARKER,
+            "",
+            "repo_dir=\"" + CLAWMOBILE_REPO_DIR_PATH + "\"",
+            "runtime_rootfs=\"" + CLAWMOBILE_RUNTIME_ROOTFS_DIR_PATH + "\"",
+            "",
+            "repo_ready=false",
+            "[ -d \"$repo_dir/.git\" ] || [ -d \"$repo_dir/installer\" ] && repo_ready=true",
+            "",
+            "runtime_ready=false",
+            "[ -d \"$runtime_rootfs\" ] && runtime_ready=true",
+            "",
+            "amber='\\e[38;5;214m'",
+            "signal='\\e[38;5;114m'",
+            "info='\\e[38;5;117m'",
+            "dim='\\e[38;5;245m'",
+            "bold='\\e[1m'",
+            "reset='\\e[0m'",
+            "",
+            "printf '%b\\n' \"${amber}${bold}ClawMobile Field Console${reset}\"",
+            "printf '%b\\n' \"${dim}OpenClaw mobile runtime on ClawMobile.${reset}\"",
+            "printf '\\n'",
+            "",
+            "if [ \"$repo_ready\" = true ]; then",
+            "  printf '%b\\n' \"${bold}Repository:${reset} ${info}~/ClawMobile${reset}\"",
+            "  if [ \"$runtime_ready\" = true ]; then",
+            "    printf '%b\\n' \"${bold}Start OpenClaw:${reset} cd ~/ClawMobile && ./installer/termux/run.sh\"",
+            "    printf '%b\\n' \"${bold}Pair device:${reset}   cd ~/ClawMobile && ./installer/termux/pairing.sh\"",
+            "    printf '%b\\n' \"${bold}Onboard workspace:${reset} cd ~/ClawMobile && ./installer/termux/onboard.sh\"",
+            "  else",
+            "    printf '%b\\n' \"${bold}Install runtime:${reset} cd ~/ClawMobile && ./installer/termux/install.sh\"",
+            "  fi",
+            "else",
+            "  printf '%b\\n' \"${bold}Next step:${reset} use the ${signal}DEPLOY CLAWMOBILE${reset} button in the launcher.\"",
+            "  printf '%b\\n' \"${bold}Manual fallback:${reset} pkg install -y git && git clone https://github.com/ClawMobile/ClawMobile.git ~/ClawMobile\"",
+            "fi",
+            "",
+            "printf '\\n'",
+            "printf '%b\\n' \"${bold}Useful paths:${reset}\"",
+            "printf '%b\\n' \" - Repo:    ~/ClawMobile\"",
+            "printf '%b\\n' \" - Logs:    ~/.clawmobile/install.log\"",
+            "printf '%b\\n' \" - Runtime: ${runtime_rootfs}\"",
+            "");
     }
 
     public static byte[] loadZipBytes() {

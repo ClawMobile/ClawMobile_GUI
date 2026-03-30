@@ -1,1 +1,1 @@
-Terminal emulator app with a large set of command line utilities
+ClawMobile on-device field console and runtime shell for Android

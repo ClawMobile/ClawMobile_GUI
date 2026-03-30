@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design"
+  short_description: "Build bold, production-grade web interfaces"
+  default_prompt: "Use $frontend-design to build a distinctive, production-grade frontend for this request."

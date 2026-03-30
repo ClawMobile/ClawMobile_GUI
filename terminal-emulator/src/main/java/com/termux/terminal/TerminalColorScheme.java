@@ -14,23 +14,23 @@ public final class TerminalColorScheme {
     /** http://upload.wikimedia.org/wikipedia/en/1/15/Xterm_256color_chart.svg, but with blue color brighter. */
     private static final int[] DEFAULT_COLORSCHEME = {
         // 16 original colors. First 8 are dim.
-        0xff000000, // black
-        0xffcd0000, // dim red
-        0xff00cd00, // dim green
-        0xffcdcd00, // dim yellow
-        0xff6495ed, // dim blue
-        0xffcd00cd, // dim magenta
-        0xff00cdcd, // dim cyan
-        0xffe5e5e5, // dim white
+        0xff0a0d0c, // black
+        0xff8d4a2f, // dim red
+        0xff5f8260, // dim green
+        0xffa18a4d, // dim yellow
+        0xff5d7b8c, // dim blue
+        0xff8e6488, // dim magenta
+        0xff5c8d88, // dim cyan
+        0xffd8cdbb, // dim white
         // Second 8 are bright:
-        0xff7f7f7f, // medium grey
-        0xffff0000, // bright red
-        0xff00ff00, // bright green
-        0xffffff00, // bright yellow
-        0xff5c5cff, // light blue
-        0xffff00ff, // bright magenta
-        0xff00ffff, // bright cyan
-        0xffffffff, // bright white
+        0xff596057, // medium grey
+        0xffe1784b, // bright red
+        0xffb7db84, // bright green
+        0xfff1be64, // bright yellow
+        0xff81a6bc, // light blue
+        0xffc795c6, // bright magenta
+        0xff8ccac1, // bright cyan
+        0xfff7f0e2, // bright white
 
         // 216 color cube, six shades of each color:
         0xff000000, 0xff00005f, 0xff000087, 0xff0000af, 0xff0000d7, 0xff0000ff, 0xff005f00, 0xff005f5f, 0xff005f87, 0xff005faf, 0xff005fd7, 0xff005fff,
@@ -57,7 +57,7 @@ public final class TerminalColorScheme {
         0xff808080, 0xff8a8a8a, 0xff949494, 0xff9e9e9e, 0xffa8a8a8, 0xffb2b2b2, 0xffbcbcbc, 0xffc6c6c6, 0xffd0d0d0, 0xffdadada, 0xffe4e4e4, 0xffeeeeee,
 
         // COLOR_INDEX_DEFAULT_FOREGROUND, COLOR_INDEX_DEFAULT_BACKGROUND and COLOR_INDEX_DEFAULT_CURSOR:
-        0xffffffff, 0xff000000, 0xffffffff};
+        0xfff7f0e2, 0xff0f1310, 0xfff1be64};
 
     public final int[] mDefaultColors = new int[TextStyle.NUM_INDEXED_COLORS];
 

@@ -1,13 +1,13 @@
 ---
-page_ref: /docs/apps/termux/index.html
+page_ref: /docs/apps/clawmobile/index.html
 ---
 
-# Termux App Docs
+# ClawMobile Docs
 
 <!--- DOC_HEADER_PLACEHOLDER -->
 
-Welcome to documentation for the [Termux App].
+Welcome to documentation for [ClawMobile].
 
 ##
 
-[Termux App]: https://github.com/termux/termux-app
+[ClawMobile]: https://clawmobile.ae/docs
