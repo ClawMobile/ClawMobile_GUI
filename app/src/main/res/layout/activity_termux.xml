@@ -320,7 +320,7 @@
                                 android:src="@drawable/ic_settings"
                                 android:background="@drawable/clawmobile_terminal_button_bg"
                                 android:padding="10dp"
-                                android:contentDescription="@string/action_open_settings"
+                                android:contentDescription="@string/clawmobile_open_control_deck"
                                 app:tint="?attr/termuxActivityDrawerImageTint" />
                         </LinearLayout>
 
