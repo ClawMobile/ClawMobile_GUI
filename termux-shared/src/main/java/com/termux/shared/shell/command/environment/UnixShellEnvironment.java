@@ -52,8 +52,15 @@ public abstract class UnixShellEnvironment implements IShellEnvironment {
     public static final String ENV_TMPDIR = "TMPDIR";
 
 
-    /** Names for common/supported login shell binaries. */
-    public static final String[] LOGIN_SHELL_BINARIES = new String[]{"login", "bash", "zsh", "fish", "sh"};
+    /**
+     * Names for common/supported shell binaries.
+     *
+     * Prefer interactive shells like bash before the standalone `login` binary.
+     * ClawMobile creates fresh hidden/foreground sessions for deploy/runtime
+     * flows, and a broken or non-executable `$PREFIX/bin/login` should not block
+     * session startup when `$PREFIX/bin/bash` is healthy.
+     */
+    public static final String[] LOGIN_SHELL_BINARIES = new String[]{"bash", "zsh", "fish", "sh", "login"};
 
 
 

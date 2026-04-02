@@ -1,4 +1,4 @@
-#!/data/data/ae.clawmobile/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
 UBUNTU_DISTRO="${UBUNTU_DISTRO:-ubuntu}"

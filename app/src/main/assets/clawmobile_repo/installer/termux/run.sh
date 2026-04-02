@@ -1,4 +1,4 @@
-#!/data/data/ae.clawmobile/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
 UBUNTU_DISTRO="${UBUNTU_DISTRO:-ubuntu}"
@@ -10,7 +10,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 PLUGIN_DIR="${REPO_ROOT}/openclaw-plugin-mobile-ui"
 
 # ---- choose droidrun provider/model in Termux, then pass to Ubuntu via temp env ----
-TMP_ENV="${TMPDIR:-/data/data/ae.clawmobile/files/usr/tmp}/clawbot-env.$$.sh"
+TMP_ENV="${TMPDIR:-/data/data/com.termux/files/usr/tmp}/clawbot-env.$$.sh"
 trap 'rm -f "$TMP_ENV"' EXIT
 
 DROIDRUN_PROVIDER_CHOSEN="${DROIDRUN_PROVIDER:-}"

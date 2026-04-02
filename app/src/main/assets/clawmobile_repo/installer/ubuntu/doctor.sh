@@ -88,7 +88,7 @@ fi
 
 # 6) termux-api availability
 section "termux-api"
-TERMUX_BIN=${CLAW_MOBILE_TERMUX_BIN:-/data/data/ae.clawmobile/files/usr/bin}
+TERMUX_BIN=${CLAW_MOBILE_TERMUX_BIN:-/data/data/com.termux/files/usr/bin}
 if [ -x "$TERMUX_BIN/termux-notification" ] || [ -x "$TERMUX_BIN/termux-info" ] || command -v termux-notification >/dev/null 2>&1; then
   pass "termux-api available"
 else

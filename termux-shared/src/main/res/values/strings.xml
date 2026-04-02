@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!DOCTYPE resources [
-    <!ENTITY TERMUX_PACKAGE_NAME "ae.clawmobile">
+    <!ENTITY TERMUX_PACKAGE_NAME "com.termux">
     <!ENTITY TERMUX_APP_NAME "ClawMobile">
     <!ENTITY TERMUX_API_APP_NAME "ClawMobile API">
     <!ENTITY TERMUX_BOOT_APP_NAME "ClawMobile Boot">
@@ -9,7 +9,7 @@
     <!ENTITY TERMUX_STYLING_APP_NAME "ClawMobile Styling">
     <!ENTITY TERMUX_TASKER_APP_NAME "ClawMobile Tasker">
     <!ENTITY TERMUX_WIDGET_APP_NAME "ClawMobile Widget">
-    <!ENTITY TERMUX_PREFIX_DIR_PATH "/data/data/ae.clawmobile/files/usr">
+    <!ENTITY TERMUX_PREFIX_DIR_PATH "/data/data/com.termux/files/usr">
     ]>
 
 <resources>

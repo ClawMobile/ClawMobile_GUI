@@ -118,8 +118,8 @@ export async function android_shell(input: {
   if (backend === "termux") {
     const preferred =
       process.env.CLAW_MOBILE_TERMUX_SHELL ||
-      "/data/data/ae.clawmobile/files/usr/bin/bash";
-    const fallback = "/data/data/ae.clawmobile/files/usr/bin/sh";
+      "/data/data/com.termux/files/usr/bin/bash";
+    const fallback = "/data/data/com.termux/files/usr/bin/sh";
     const termuxShell = fs.existsSync(preferred) ? preferred : fallback;
 
     if (!fs.existsSync(termuxShell)) {

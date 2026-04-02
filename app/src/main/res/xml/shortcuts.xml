@@ -16,7 +16,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.RUN"
-            android:targetPackage="ae.clawmobile"
+            android:targetPackage="com.termux"
             android:targetClass="com.termux.app.TermuxActivity"
             android:name="android.shortcut.conversation"/>
     </shortcut>
@@ -29,10 +29,10 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.RUN"
-            android:targetPackage="ae.clawmobile"
+            android:targetPackage="com.termux"
             android:targetClass="com.termux.app.TermuxActivity"
             android:name="android.shortcut.conversation">
-            <extra android:name="ae.clawmobile.app.failsafe_session" android:value="true"/>
+            <extra android:name="com.termux.app.failsafe_session" android:value="true"/>
         </intent>
     </shortcut>
 

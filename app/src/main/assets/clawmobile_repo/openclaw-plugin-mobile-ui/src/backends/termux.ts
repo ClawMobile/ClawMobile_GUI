@@ -6,7 +6,7 @@ export type TermuxResult = { ok: boolean; code: number; stdout: string; stderr: 
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 
-const TERMUX_BIN = process.env.CLAW_MOBILE_TERMUX_BIN || "/data/data/ae.clawmobile/files/usr/bin";
+const TERMUX_BIN = process.env.CLAW_MOBILE_TERMUX_BIN || "/data/data/com.termux/files/usr/bin";
 
 function resolveTermuxCmd(cmd: string) {
   const p = path.join(TERMUX_BIN, cmd);

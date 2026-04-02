@@ -1,4 +1,4 @@
-#!/data/data/ae.clawmobile/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
 UBUNTU="ubuntu"
@@ -11,7 +11,7 @@ echo "[+] Installing prerequisites..."
 pkg install -y proot-distro git curl termux-api android-tools
 
 echo "[+] Installing proot Ubuntu (${UBUNTU}) if missing..."
-UBUNTU_ROOTFS="/data/data/ae.clawmobile/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu"
+UBUNTU_ROOTFS="/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu"
 if [ ! -d "$UBUNTU_ROOTFS" ]; then
   echo "[install] Ubuntu not found, installing..."
   proot-distro install "$UBUNTU"
