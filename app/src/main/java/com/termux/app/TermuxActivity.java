@@ -430,6 +430,16 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         }
     }
 
+    private static final class ShellCommandResult {
+        final int exitCode;
+        @NonNull final String output;
+
+        private ShellCommandResult(int exitCode, @NonNull String output) {
+            this.exitCode = exitCode;
+            this.output = output;
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Logger.logDebug(LOG_TAG, "onCreate");
@@ -1042,6 +1052,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         }
     }
 
+    private boolean isAdbPairingAvailable() {
+        return mIsClawMobilePrepared;
+    }
+
     @NonNull
     private String getSelectedOnboardingProvider() {
         if (mLauncherOnboardingProviderGroup == null) {
@@ -1581,7 +1595,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void submitAdbPairingFromLauncher() {
         if (mIsInstallRunning || mIsOnboardingRunning || mIsAdbPairingRunning
-            || mIsChannelPairingRunning || !mHasClawMobileRuntimeInstalled) {
+            || mIsChannelPairingRunning || !isAdbPairingAvailable()) {
             return;
         }
 
@@ -1603,17 +1617,15 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             showToast("Pairing code is required", false);
             return;
         }
-        if (connectPort.isEmpty()) {
-            showToast("ADB connect port is required", false);
-            return;
-        }
 
-        getSharedPreferences(CLAWMOBILE_UI_PREFS, MODE_PRIVATE)
-            .edit()
-            .putString(PREF_PAIR_HOST, host)
-            .putString(PREF_PAIR_PORT, pairPort)
-            .putString(PREF_PAIR_CONNECT_PORT, connectPort)
-            .apply();
+        android.content.SharedPreferences.Editor editor =
+            getSharedPreferences(CLAWMOBILE_UI_PREFS, MODE_PRIVATE).edit()
+                .putString(PREF_PAIR_HOST, host)
+                .putString(PREF_PAIR_PORT, pairPort);
+        if (!connectPort.isEmpty()) {
+            editor.putString(PREF_PAIR_CONNECT_PORT, connectPort);
+        }
+        editor.apply();
 
         if (mLauncherPairingCodeInput != null) {
             mLauncherPairingCodeInput.setText(pairCode);
@@ -1624,7 +1636,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void submitAdbConnectFromLauncher() {
         if (mIsInstallRunning || mIsOnboardingRunning || mIsAdbPairingRunning
-            || mIsChannelPairingRunning || !mHasClawMobileRuntimeInstalled) {
+            || mIsChannelPairingRunning || !isAdbPairingAvailable()) {
             return;
         }
 
@@ -2319,6 +2331,54 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             CLAWMOBILE_RUN_SCRIPT_RELATIVE_PATH;
     }
 
+    @NonNull
+    private List<String> buildClawMobileScriptCommand(@NonNull String relativeScriptPath,
+                                                      @NonNull String... arguments) {
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        File scriptFile = new File(repoDir, relativeScriptPath);
+        File bashBinary = new File(TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH, "bash");
+
+        ArrayList<String> command = new ArrayList<>();
+        command.add(bashBinary.getAbsolutePath());
+        command.add(scriptFile.getAbsolutePath());
+        command.addAll(Arrays.asList(arguments));
+        return command;
+    }
+
+    private void runAdbActionInBackground(@NonNull List<String> command, boolean connectAction) {
+        closeDedicatedInstallSession();
+        clearInstallSessionReference();
+
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        String label = connectAction ? "wireless ADB connect" : "wireless ADB pair";
+        String threadName = connectAction ? "ClawMobileAdbConnect" : "ClawMobileAdbPair";
+
+        new Thread(() -> {
+            try {
+                ShellCommandResult result = runCommandCaptureResult(command, repoDir);
+                runOnUiThread(() -> {
+                    updateLauncherTerminalTail(result.output, getLastNonEmptyLine(result.output));
+                    updateAdbPairProgressFromTranscript(result.output);
+                    if (result.exitCode == 0) {
+                        String progressText = connectAction
+                            ? "Local wireless ADB device linked."
+                            : "Wireless ADB pairing approved. Run Connect local device next.";
+                        onAdbPairingReady(progressText, connectAction);
+                    } else {
+                        String hint = getLastNonEmptyLine(result.output);
+                        onAdbPairingFailed(hint != null ? hint : label + " failed (exit " + result.exitCode + ")");
+                    }
+                });
+            } catch (IOException e) {
+                String reason = e.getMessage() != null ? e.getMessage() : label + " failed";
+                runOnUiThread(() -> {
+                    updateLauncherTerminalTail(null, reason);
+                    onAdbPairingFailed(reason);
+                });
+            }
+        }, threadName).start();
+    }
+
     @Nullable
     private TerminalSession createFreshInstallSession() {
         if (mTermuxService == null || mTermuxTerminalSessionActivityClient == null) {
@@ -2462,10 +2522,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
                 setChannelPairingUiEnabled(true);
             } else {
                 setOnboardingSectionVisible(false);
-                setPairingSectionVisible(false);
+                setPairingSectionVisible(isAdbPairingAvailable());
                 setChannelPairingSectionVisible(false);
                 setOnboardingUiEnabled(true);
-                setPairingUiEnabled(false);
+                setPairingUiEnabled(isAdbPairingAvailable());
                 setChannelPairingUiEnabled(false);
             }
             updatePrimaryLauncherButtonState();
@@ -2670,6 +2730,18 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     @NonNull
     private String runCommandCheckedCapture(@NonNull List<String> command, @Nullable File workingDirectory,
                                             @NonNull String label) throws IOException {
+        ShellCommandResult result = runCommandCaptureResult(command, workingDirectory);
+        if (result.exitCode != 0) {
+            String hint = getLastNonEmptyLine(result.output);
+            throw new IOException(label + " failed" + (hint != null ? ": " + hint : " (exit " + result.exitCode + ")"));
+        }
+
+        return result.output;
+    }
+
+    @NonNull
+    private ShellCommandResult runCommandCaptureResult(@NonNull List<String> command,
+                                                       @Nullable File workingDirectory) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
         processBuilder.directory(workingDirectory != null ? workingDirectory : TermuxConstants.TERMUX_HOME_DIR);
@@ -2690,12 +2762,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             throw new IOException("Interrupted while executing command", e);
         }
 
-        if (exitCode != 0) {
-            String hint = getLastNonEmptyLine(output);
-            throw new IOException(label + " failed" + (hint != null ? ": " + hint : " (exit " + exitCode + ")"));
-        }
-
-        return output;
+        return new ShellCommandResult(exitCode, output);
     }
 
     private void scheduleAutomaticClawMobilePreparation() {
@@ -2819,7 +2886,8 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             mLauncherProgressText.setText("Bundled ClawMobile repo is ready at ~/ClawMobile. Tap Install to run install.sh.");
             updateLauncherTerminalTail(null, "Bundled repo is ready at ~/ClawMobile.");
             setOnboardingSectionVisible(false);
-            setPairingSectionVisible(false);
+            setPairingSectionVisible(true);
+            setPairingUiEnabled(true);
             setChannelPairingSectionVisible(false);
             setOperateUiEnabled(false);
             updateConsoleIdleState();
@@ -2960,9 +3028,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void startAdbPairing(@NonNull String host, @NonNull String pairPort,
                                  @NonNull String pairCode) {
-        TerminalSession session = createFreshInstallSession();
-        if (session == null) {
-            onInstallFailed("Failed to create device link terminal session");
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        File pairScript = new File(repoDir, CLAWMOBILE_ADB_PAIR_SCRIPT_RELATIVE_PATH);
+        if (!pairScript.isFile()) {
+            onAdbPairingFailed("Wireless ADB pair script is missing from ~/ClawMobile.");
             return;
         }
 
@@ -2984,16 +3053,17 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setOnboardingSectionVisible(true);
         setPairingSectionVisible(true);
         setChannelPairingSectionVisible(true);
-
-        String pairMarker = createClawMobileMarker("PAIR");
-        launchAdbPairCommandWhenReady(session,
-            buildAdbPairCommand(pairMarker, host, pairPort, pairCode), 0, pairMarker);
+        runAdbActionInBackground(
+            buildClawMobileScriptCommand(CLAWMOBILE_ADB_PAIR_SCRIPT_RELATIVE_PATH, host, pairPort, pairCode),
+            false
+        );
     }
 
     private void startAdbConnect(@NonNull String host, @NonNull String connectPort) {
-        TerminalSession session = createFreshInstallSession();
-        if (session == null) {
-            onInstallFailed("Failed to create device connect terminal session");
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        File connectScript = new File(repoDir, CLAWMOBILE_ADB_CONNECT_SCRIPT_RELATIVE_PATH);
+        if (!connectScript.isFile()) {
+            onAdbPairingFailed("Wireless ADB connect script is missing from ~/ClawMobile.");
             return;
         }
 
@@ -3015,10 +3085,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setOnboardingSectionVisible(true);
         setPairingSectionVisible(true);
         setChannelPairingSectionVisible(true);
-
-        String connectMarker = createClawMobileMarker("CONNECT");
-        launchAdbPairCommandWhenReady(session,
-            buildAdbConnectCommand(connectMarker, host, connectPort), 0, connectMarker);
+        runAdbActionInBackground(
+            buildClawMobileScriptCommand(CLAWMOBILE_ADB_CONNECT_SCRIPT_RELATIVE_PATH, host, connectPort),
+            true
+        );
     }
 
     private void startTelegramPairing(@NonNull String pairCode) {
@@ -3692,8 +3762,8 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             .setText(mHasClawMobileRuntimeInstalled ? R.string.clawmobile_onboard_start : R.string.clawmobile_install_start);
         setOnboardingSectionVisible(mHasClawMobileRuntimeInstalled);
         setOnboardingUiEnabled(mHasClawMobileRuntimeInstalled);
-        setPairingSectionVisible(mHasClawMobileRuntimeInstalled);
-        setPairingUiEnabled(mHasClawMobileRuntimeInstalled);
+        setPairingSectionVisible(isAdbPairingAvailable());
+        setPairingUiEnabled(isAdbPairingAvailable());
         setChannelPairingSectionVisible(mHasClawMobileRuntimeInstalled);
         setChannelPairingUiEnabled(mHasClawMobileRuntimeInstalled);
         setOperateUiEnabled(true);
@@ -3772,7 +3842,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         mIsInstallRunning = false;
         mIsChannelPairingRunning = false;
         mIsRuntimeLaunchRunning = false;
-        mHasClawMobileRuntimeInstalled = true;
+        mHasClawMobileRuntimeInstalled = isClawMobileRuntimeInstalledOnDisk();
         if (!connected) {
             String host = mLauncherPairingHostInput == null ? "127.0.0.1"
                 : mLauncherPairingHostInput.getText().toString().trim();
@@ -3792,13 +3862,13 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         updateAdbPairingStatusMessage(true, connected, null);
         mLauncherInstallButton.setEnabled(true);
         ((com.google.android.material.button.MaterialButton) mLauncherInstallButton)
-            .setText(R.string.clawmobile_onboard_start);
-        setOnboardingSectionVisible(true);
+            .setText(mHasClawMobileRuntimeInstalled ? R.string.clawmobile_onboard_start : R.string.clawmobile_install_start);
+        setOnboardingSectionVisible(mHasClawMobileRuntimeInstalled);
         setPairingSectionVisible(true);
-        setChannelPairingSectionVisible(true);
-        setOnboardingUiEnabled(true);
+        setChannelPairingSectionVisible(mHasClawMobileRuntimeInstalled);
+        setOnboardingUiEnabled(mHasClawMobileRuntimeInstalled);
         setPairingUiEnabled(true);
-        setChannelPairingUiEnabled(true);
+        setChannelPairingUiEnabled(mHasClawMobileRuntimeInstalled);
         setOperateUiEnabled(true);
         setHealthUiEnabled(true);
         selectLauncherTab(connected ? CLAWMOBILE_TAB_HEALTH : CLAWMOBILE_TAB_SETUP);
@@ -3815,7 +3885,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         mIsInstallRunning = false;
         mIsChannelPairingRunning = false;
         mIsRuntimeLaunchRunning = false;
-        mHasClawMobileRuntimeInstalled = true;
+        mHasClawMobileRuntimeInstalled = isClawMobileRuntimeInstalledOnDisk();
         mLauncherProgressBar.setIndeterminate(false);
         mLauncherStatusText.setText(R.string.clawmobile_install_failed);
         mLauncherProgressText.setText(reason);
@@ -3823,13 +3893,13 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         updateAdbPairingStatusMessage(hasSavedAdbPairApproval(), false, null);
         mLauncherInstallButton.setEnabled(true);
         ((com.google.android.material.button.MaterialButton) mLauncherInstallButton)
-            .setText(R.string.clawmobile_onboard_start);
-        setOnboardingSectionVisible(true);
+            .setText(mHasClawMobileRuntimeInstalled ? R.string.clawmobile_onboard_start : R.string.clawmobile_install_start);
+        setOnboardingSectionVisible(mHasClawMobileRuntimeInstalled);
         setPairingSectionVisible(true);
-        setChannelPairingSectionVisible(true);
-        setOnboardingUiEnabled(true);
+        setChannelPairingSectionVisible(mHasClawMobileRuntimeInstalled);
+        setOnboardingUiEnabled(mHasClawMobileRuntimeInstalled);
         setPairingUiEnabled(true);
-        setChannelPairingUiEnabled(true);
+        setChannelPairingUiEnabled(mHasClawMobileRuntimeInstalled);
         setOperateUiEnabled(true);
         setHealthUiEnabled(true);
         switchToLauncherView();
@@ -3961,10 +4031,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         mLauncherProgressText.setText(reason);
         updateLauncherTerminalTail(null, reason);
         setOnboardingSectionVisible(mHasClawMobileRuntimeInstalled);
-        setPairingSectionVisible(mHasClawMobileRuntimeInstalled);
+        setPairingSectionVisible(isAdbPairingAvailable());
         setChannelPairingSectionVisible(mHasClawMobileRuntimeInstalled);
         setOnboardingUiEnabled(mHasClawMobileRuntimeInstalled);
-        setPairingUiEnabled(mHasClawMobileRuntimeInstalled);
+        setPairingUiEnabled(isAdbPairingAvailable());
         setChannelPairingUiEnabled(mHasClawMobileRuntimeInstalled);
         setOperateUiEnabled(true);
         setHealthUiEnabled(true);
