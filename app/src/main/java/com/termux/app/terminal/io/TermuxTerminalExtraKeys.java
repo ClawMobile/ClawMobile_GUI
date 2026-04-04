@@ -100,6 +100,23 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
             TerminalView terminalView = mTermuxTerminalViewClient.getActivity().getTerminalView();
             if (terminalView != null && terminalView.mEmulator != null)
                 terminalView.mEmulator.toggleAutoScrollDisabled();
+        } else if ("DECK".equals(key)) {
+            mActivity.switchToLauncherView();
+        } else if ("SETUP".equals(key)) {
+            mActivity.showClawMobileSetupTab();
+        } else if ("CHAT".equals(key)) {
+            mActivity.showClawMobileChannelsTab();
+        } else if ("HEALTH".equals(key)) {
+            mActivity.showClawMobileHealthTab();
+        } else if ("INSTALL".equals(key)) {
+            mActivity.injectClawMobileCommand("cd \"$HOME/ClawMobile\" && ./installer/termux/install.sh",
+                "Sent install.sh to the current shell.");
+        } else if ("ONBOARD".equals(key)) {
+            mActivity.injectClawMobileCommand("cd \"$HOME/ClawMobile\" && ./installer/termux/onboard.sh",
+                "Sent onboard.sh to the current shell.");
+        } else if ("RUN".equals(key)) {
+            mActivity.injectClawMobileCommand("cd \"$HOME/ClawMobile\" && ./installer/termux/run.sh",
+                "Sent run.sh to the current shell.");
         } else {
             super.onTerminalExtraKeyButtonClick(view, key, ctrlDown, altDown, shiftDown, fnDown);
         }

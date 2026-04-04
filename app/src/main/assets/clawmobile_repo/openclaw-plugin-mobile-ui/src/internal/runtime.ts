@@ -1,7 +1,5 @@
 import { appendToolAudit } from "../tools/workspace";
 
-export type CompositeBackend = "auto" | "adb" | "droidrun";
-
 export function runtimeEnvFlags() {
   return {
     DROIDRUN_SERIAL: process.env.DROIDRUN_SERIAL || "",
@@ -51,31 +49,4 @@ export function auditError(tool: string, start: number, error: unknown, extra?: 
     error: String((error as any)?.message || error || "unknown_error"),
     ...(extra || {}),
   });
-}
-
-export async function runWithBackendFallback(args: {
-  backend?: CompositeBackend;
-  adbAction: () => Promise<any>;
-  droidrunAction: () => Promise<any>;
-  hasAdbDevice: () => Promise<boolean>;
-}) {
-  const backend = args.backend ?? "auto";
-
-  if (backend === "adb") {
-    return { res: await args.adbAction(), resolvedBackend: "adb" as const };
-  }
-
-  if (backend === "droidrun") {
-    return { res: await args.droidrunAction(), resolvedBackend: "droidrun" as const };
-  }
-
-  const hasAdb = await args.hasAdbDevice();
-  if (hasAdb) {
-    const adbRes = await args.adbAction();
-    if ((adbRes as any)?.ok) {
-      return { res: adbRes, resolvedBackend: "adb" as const };
-    }
-  }
-
-  return { res: await args.droidrunAction(), resolvedBackend: "droidrun" as const };
 }

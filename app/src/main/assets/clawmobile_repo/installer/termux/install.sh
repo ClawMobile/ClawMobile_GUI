@@ -1,7 +1,20 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
-UBUNTU="ubuntu"
+UBUNTU="clawmobile-ubuntu"
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+CUSTOM_PLUGIN="${PREFIX}/etc/proot-distro/${UBUNTU}.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+CUSTOM_PLUGIN_SOURCE="${SCRIPT_DIR}/${UBUNTU}.sh"
+
+install_custom_ubuntu_plugin() {
+  if [ ! -f "${CUSTOM_PLUGIN_SOURCE}" ]; then
+    echo "[install] ERROR: bundled ClawMobile Ubuntu plugin not found at ${CUSTOM_PLUGIN_SOURCE}" >&2
+    exit 1
+  fi
+  install -m 0644 "${CUSTOM_PLUGIN_SOURCE}" "${CUSTOM_PLUGIN}"
+}
 
 echo "[+] Updating Termux packages..."
 pkg update -y
@@ -10,8 +23,11 @@ pkg upgrade -y
 echo "[+] Installing prerequisites..."
 pkg install -y proot-distro git curl termux-api android-tools
 
+echo "[+] Installing ClawMobile Ubuntu plugin..."
+install_custom_ubuntu_plugin
+
 echo "[+] Installing proot Ubuntu (${UBUNTU}) if missing..."
-UBUNTU_ROOTFS="/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs/ubuntu"
+UBUNTU_ROOTFS="${PREFIX}/var/lib/proot-distro/installed-rootfs/${UBUNTU}"
 if [ ! -d "$UBUNTU_ROOTFS" ]; then
   echo "[install] Ubuntu not found, installing..."
   proot-distro install "$UBUNTU"
@@ -20,9 +36,6 @@ else
 fi
 
 echo "[+] Entering Ubuntu and running bootstrap..."
-# Resolve repo root based on script location (assumes you run this from the repo)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 # Launch Ubuntu and run bootstrap inside it
 proot-distro login "${UBUNTU}" --shared-tmp -- \
@@ -33,9 +46,12 @@ echo
 echo
 echo "[✓] Install finished."
 echo
-echo "Next steps:"
+echo "Back in Termux, run the next steps from the project root:"
 echo "  1) Run onboarding (interactive):"
-echo "     ${REPO_ROOT}/installer/termux/onboard.sh"
+echo "     ./installer/termux/onboard.sh"
 echo
-echo "  2) Start gateway anytime:"
-echo "     ${REPO_ROOT}/installer/termux/run.sh"
+echo "  2) After wireless ADB pairing, finish DroidRun setup:"
+echo "     ./installer/termux/droidrun-setup.sh"
+echo
+echo "  3) Start gateway anytime:"
+echo "     ./installer/termux/run.sh"

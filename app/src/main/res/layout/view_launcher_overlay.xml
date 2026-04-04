@@ -430,6 +430,19 @@
                         android:textColor="@color/claw_text_secondary"
                         android:textSize="11sp" />
 
+                    <TextView
+                        android:id="@+id/clawmobile_pairing_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/clawmobile_info_tile_bg"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="1dp"
+                        android:padding="12dp"
+                        android:text="@string/clawmobile_pairing_status_default"
+                        android:textColor="@color/claw_text_primary"
+                        android:textSize="12sp" />
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_clawmobile_pair_device"
                         android:layout_width="match_parent"

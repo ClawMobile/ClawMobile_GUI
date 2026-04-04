@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Pinned install versions. You can override them at runtime, for example:
+#   OPENCLAW_VERSION=2026.3.13 DROIDRUN_VERSION=0.5.1 DROIDRUN_PORTAL_VERSION=0.6.1 ./installer/termux/install.sh
+OPENCLAW_VERSION="${OPENCLAW_VERSION:-2026.3.13}"
+DROIDRUN_VERSION="${DROIDRUN_VERSION:-0.5.1}"
+DROIDRUN_PORTAL_VERSION="${DROIDRUN_PORTAL_VERSION:-0.6.1}"
+DROIDRUN_PORTAL_APK_PATH="${DROIDRUN_PORTAL_APK_PATH:-/tmp/droidrun-portal-v${DROIDRUN_PORTAL_VERSION}.apk}"
+export DROIDRUN_PORTAL_VERSION
+export DROIDRUN_PORTAL_APK_PATH
+
 echo "[+] Updating apt..."
 apt update -y
 
@@ -12,35 +21,28 @@ apt install -y \
   python3 python3-venv python3-pip \
   curl rsync
 
-echo "[+] Creating venv for clawbot/openclaw tooling..."
+echo "[+] Creating venv for ClawMobile/OpenClaw tooling..."
 mkdir -p /root/venvs
-if [[ ! -d /root/venvs/clawbot ]]; then
-  python3 -m venv /root/venvs/clawbot
+if [[ ! -d /root/venvs/clawmobile ]]; then
+  python3 -m venv /root/venvs/clawmobile
 fi
 
 # Activate venv
 # shellcheck disable=SC1091
-source /root/venvs/clawbot/bin/activate
+source /root/venvs/clawmobile/bin/activate
 
 echo "[+] Upgrading pip toolchain in venv..."
 python -m pip install --upgrade pip
 
-echo "[+] Installing Droidrun runtime (pip, no uv)..."
-# Install the Python package during bootstrap, but do not run the Portal/device
-# setup here. That step needs working adb connectivity plus user-granted
-# Android permissions, so it is handled separately after Wireless ADB is linked.
-python -m pip install "droidrun[google,anthropic,openai,deepseek,ollama,openrouter]"
-
+echo "[+] Installing DroidRun ${DROIDRUN_VERSION} (pip, no uv)..."
+# If you want extras, change [openai] to what you need.
+python -m pip install \
+  "droidrun[google,anthropic,openai,deepseek,ollama,openrouter]==${DROIDRUN_VERSION}"
 echo "[+] Verifying droidrun import..."
-python - <<'PY'
-import droidrun
-print(getattr(droidrun, "__version__", "ok"))
-PY
+python -c "import droidrun"
 
-echo "[*] Droidrun package installed."
-echo "[*] Portal setup is deferred until local adb is linked."
-echo "[*] Next step after Wireless ADB connect:"
-echo "    ./installer/termux/droidrun-setup.sh"
+echo "[+] Deferring DroidRun Portal setup until ADB pairing is complete."
+echo "[+] After wireless ADB is connected, run ./installer/termux/droidrun-setup.sh"
 
 
 # Apply env hardening (cache/tmp inside venv)
@@ -58,7 +60,8 @@ echo
 echo "[*] OpenClaw installation"
 echo
 
-curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard
+echo "[+] Installing OpenClaw ${OPENCLAW_VERSION}..."
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard --version "${OPENCLAW_VERSION}"
 
 
 echo "[✓] Bootstrap complete."
