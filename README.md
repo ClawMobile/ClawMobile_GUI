@@ -12,6 +12,8 @@ If you are new here, the main thing to know is:
 
 **You install the APK, open the app, let it deploy `~/ClawMobile`, then complete setup from inside the app.**
 
+This repo also carries a prebuilt APK for convenience, but it is not guaranteed to fit every device architecture. If that APK does not install or run correctly on your phone, build the app from source for your target device.
+
 ---
 
 ## What this app does
@@ -48,13 +50,18 @@ If you only want to understand the runtime that runs inside the phone after depl
 
 Build or download the APK, then install it on an Android device.
 
-For local development, the debug APK is typically:
+This repository currently includes a prebuilt debug APK for `arm64-v8a` devices:
+- [releases/clawmobile_apt-android-7-debug_arm64-v8a.apk](/Users/ahengljh/Repos/termux-app/releases/clawmobile_apt-android-7-debug_arm64-v8a.apk)
+- [releases/clawmobile_apt-android-7-debug_arm64-v8a.apk.sha256](/Users/ahengljh/Repos/termux-app/releases/clawmobile_apt-android-7-debug_arm64-v8a.apk.sha256)
+
+If your phone is not `arm64-v8a`, or if you want a different build variant, compile the APK yourself. For local development, the generated debug outputs are typically:
+- [app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_arm64-v8a.apk](/Users/ahengljh/Repos/termux-app/app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_arm64-v8a.apk)
 - [app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_universal.apk](/Users/ahengljh/Repos/termux-app/app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_universal.apk)
 
 Install with:
 
 ```sh
-adb install -r app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_universal.apk
+adb install -r releases/clawmobile_apt-android-7-debug_arm64-v8a.apk
 ```
 
 ### 2. Open the app
@@ -236,6 +243,8 @@ export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
 ### Install
+
+If the bundled `arm64-v8a` APK does not match your device, build first and then install the generated output that fits your architecture.
 
 ```sh
 adb install -r app/build/outputs/apk/debug/clawmobile_apt-android-7-debug_universal.apk
