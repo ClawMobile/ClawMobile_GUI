@@ -311,7 +311,7 @@
     <string name="clawmobile_channel_pairing_running">Approving Telegram pairing…</string>
     <string name="clawmobile_channel_pairing_complete">Telegram access approved.</string>
     <string name="clawmobile_pairing_panel_title">ADB Pair &amp; Connect</string>
-    <string name="clawmobile_pairing_panel_subtitle">ClawMobile uses Android Wireless debugging in two steps: first approve the pairing code, then connect the local device so OpenClaw can drive this phone.</string>
+    <string name="clawmobile_pairing_panel_subtitle">ClawMobile uses Android Wireless debugging with separate Pair and Connect actions. If this phone is already paired in Android, you can run Connect directly.</string>
     <string name="clawmobile_pairing_host_hint">Host or IP address</string>
     <string name="clawmobile_pairing_port_hint">Pairing port</string>
     <string name="clawmobile_pairing_code_hint">Pairing code</string>
@@ -319,9 +319,9 @@
     <string name="clawmobile_pairing_pair_submit">Step 1 · Approve pairing code</string>
     <string name="clawmobile_pairing_connect_submit">Step 2 · Connect local device</string>
     <string name="clawmobile_pairing_note">On the same phone, the host is usually 127.0.0.1. The pairing port and the connect port are different values in Android’s Wireless debugging screen.</string>
-    <string name="clawmobile_pairing_status_default">Start with Step 1. After pairing succeeds, run Step 2 to bring the local device online.</string>
-    <string name="clawmobile_pairing_status_needs_pair">Waiting for Step 1. Approve the Wireless debugging pairing code first.</string>
-    <string name="clawmobile_pairing_status_paired">Step 1 is done. Pairing was approved, so you can run Step 2 to connect the local device now.</string>
+    <string name="clawmobile_pairing_status_default">Pair and Connect are separate. If Android already shows this phone as paired, you can run Connect directly.</string>
+    <string name="clawmobile_pairing_status_needs_pair">Pairing is optional here. Run Pair for a new code, or Connect directly if Android already shows this phone as paired.</string>
+    <string name="clawmobile_pairing_status_paired">Pairing was approved. You can run Connect local device now.</string>
     <string name="clawmobile_pairing_status_connected">ADB is connected. OpenClaw can use the local phone transport now.</string>
     <string name="clawmobile_pairing_running">Running wireless ADB step…</string>
     <string name="clawmobile_pairing_pair_complete">Pairing approved.</string>

@@ -1224,7 +1224,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             }
             colorResId = R.color.claw_amber;
         } else {
-            message = getString(R.string.clawmobile_pairing_status_needs_pair);
+            message = getString(R.string.clawmobile_pairing_status_default);
             colorResId = R.color.claw_text_primary;
         }
 
@@ -2494,11 +2494,11 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             deviceItem = warnItem("Reconnect", adbProbe.detail);
         } else if (pairApproved) {
             String target = getSavedAdbPairTarget();
-            String detail = "Pairing was already approved. Run Connect local device next."
+            String detail = "Pairing was already approved. You can run Connect local device now."
                 + (target != null ? " Last approved target: " + target + "." : "");
-            deviceItem = warnItem("Paired", detail);
+            deviceItem = warnItem("Ready to connect", detail);
         } else if (adbProbe.available) {
-            deviceItem = warnItem("Not paired", "Approve the Wireless debugging pairing code first, then connect the device.");
+            deviceItem = warnItem("Ready", "Pair and Connect are separate. If this phone is already paired in Android Wireless debugging, you can run Connect directly.");
         } else {
             deviceItem = faultItem("Unavailable", adbProbe.detail);
         }
@@ -2600,15 +2600,12 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             operateSummary = "Runtime is installed. Apply OpenClaw setup in the Channels tab next.";
             operateDetail = "OpenClaw state has not been created inside Ubuntu yet.";
             operateColorRes = R.color.claw_amber;
-        } else if (!snapshot.devicePaired) {
-            operateState = "Waiting for pairing";
-            operateSummary = "Approve the Wireless debugging pairing code before OpenClaw can use this phone.";
-            operateDetail = "Use Step 1 in Setup, then return here after pairing is approved.";
-            operateColorRes = R.color.claw_amber;
         } else if (!snapshot.deviceLinked) {
             operateState = "Waiting for connect";
-            operateSummary = "ADB pairing is approved. Connect the local device next so the gateway can drive the phone.";
-            operateDetail = snapshot.device.detail;
+            operateSummary = "Use Pair or Connect in Setup to link the local device for OpenClaw.";
+            operateDetail = snapshot.devicePaired
+                ? snapshot.device.detail
+                : "If this phone is already paired in Android Wireless debugging, you can go straight to Connect local device.";
             operateColorRes = R.color.claw_amber;
         } else {
             operateState = "Ready to start";
@@ -2630,7 +2627,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         } else if (snapshot.devicePaired) {
             mLauncherOperateDeviceValueText.setText("Paired · connect step pending");
         } else {
-            mLauncherOperateDeviceValueText.setText("Not paired · waiting for Step 1");
+            mLauncherOperateDeviceValueText.setText("Not linked · Pair or Connect from Setup");
         }
         ((MaterialButton) mLauncherRunButton).setText(
             snapshot.gatewayOnline ? R.string.clawmobile_run_restart : R.string.clawmobile_run_start);
