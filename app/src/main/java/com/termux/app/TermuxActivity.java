@@ -2379,6 +2379,34 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         }, threadName).start();
     }
 
+    private void runChannelPairingInBackground(@NonNull List<String> command) {
+        closeDedicatedInstallSession();
+        clearInstallSessionReference();
+
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        new Thread(() -> {
+            try {
+                ShellCommandResult result = runCommandCaptureResult(command, repoDir);
+                runOnUiThread(() -> {
+                    updateLauncherTerminalTail(result.output, getLastNonEmptyLine(result.output));
+                    updateChannelPairProgressFromTranscript(result.output);
+                    if (result.exitCode == 0) {
+                        onChannelPairingReady("Telegram chat pairing approved.");
+                    } else {
+                        String hint = getLastNonEmptyLine(result.output);
+                        onChannelPairingFailed(hint != null ? hint : "Telegram pairing failed (exit " + result.exitCode + ")");
+                    }
+                });
+            } catch (IOException e) {
+                String reason = e.getMessage() != null ? e.getMessage() : "Telegram pairing failed";
+                runOnUiThread(() -> {
+                    updateLauncherTerminalTail(null, reason);
+                    onChannelPairingFailed(reason);
+                });
+            }
+        }, "ClawMobileChannelPair").start();
+    }
+
     @Nullable
     private TerminalSession createFreshInstallSession() {
         if (mTermuxService == null || mTermuxTerminalSessionActivityClient == null) {
@@ -3092,9 +3120,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
     private void startTelegramPairing(@NonNull String pairCode) {
-        TerminalSession session = createFreshInstallSession();
-        if (session == null) {
-            onInstallFailed("Failed to create channel pairing terminal session");
+        File repoDir = new File(TermuxConstants.TERMUX_HOME_DIR_PATH, CLAWMOBILE_REPO_DIR_NAME);
+        File pairScript = new File(repoDir, CLAWMOBILE_CHANNEL_PAIR_SCRIPT_RELATIVE_PATH);
+        if (!pairScript.isFile()) {
+            onChannelPairingFailed("Telegram pairing script is missing from ~/ClawMobile.");
             return;
         }
 
@@ -3116,10 +3145,9 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setOnboardingSectionVisible(true);
         setPairingSectionVisible(true);
         setChannelPairingSectionVisible(true);
-
-        String pairMarker = createClawMobileMarker("CHANNEL_PAIR");
-        launchChannelPairCommandWhenReady(session,
-            buildTelegramPairCommand(pairMarker, pairCode), 0, pairMarker);
+        runChannelPairingInBackground(
+            buildClawMobileScriptCommand(CLAWMOBILE_CHANNEL_PAIR_SCRIPT_RELATIVE_PATH, pairCode)
+        );
     }
 
     private void launchRunCommandWhenReady(@NonNull TerminalSession session, @NonNull String command,
